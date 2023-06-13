@@ -1,11 +1,9 @@
 from flask import Flask, render_template, request
-from werkzeug.utils import secure_filename
 import os
 from datetime import datetime
 import re
 
 def filename():
-
     return re.sub('[^0-9]','',str(datetime.now()))
 
 app = Flask(__name__)
@@ -21,7 +19,6 @@ def result():
     if request.method == "POST":
         if 'data' in request.files:
             file = request.files['data']
-            print(file)
             # Write the data to a file.
             filepath = os.path.join(app.config["UPLOAD_FOLDER"], f"{filename()}.wav")
             file.save(filepath)
@@ -34,16 +31,17 @@ def result():
             ##########################################################################################
 
         else:
-            question = request.form.get('question')
-    
+            question = request.get_json()
+            print(question)
         ##########################################################################################
         # 
         # reply=_prompt_openAI(question)        
         # 
+        # reply is expected in text/audio format?
         ##########################################################################################
 
 
-        return render_template("index.html", reply=reply)
+        return render_template("index.html") #, reply=reply)
     return render_template("index.html")
 
 if __name__=='__main__':
