@@ -18,7 +18,7 @@ function handlerFunction(stream) {
 
 record.onclick = e => {
     record.disabled = true;
-    record.style.backgroundColor = "blue"
+    record.style.backgroundColor = "green"
     stopRecord.disabled=false;
     audioChunks = [];
     rec.start();
@@ -27,7 +27,7 @@ record.onclick = e => {
 stopRecord.onclick = e => {
   record.disabled = false;
   stop.disabled=true;
-  record.style.backgroundColor = "red"
+  record.style.backgroundColor = "white"
   rec.stop();
 // }
 // sendRecord.onclick = e => {
@@ -42,16 +42,6 @@ stopRecord.onclick = e => {
     url: '/result',
     data: formData,
     contentType: false,
-    processData: false,
-    success: function(result) {
-      console.log('success', result);
-
-      $("#chatbox").append(`<p class ="userText"><audio style="background-color:white;" controls> <source src="${Url}" type="audio/wav"></audio></p>`);
-      $("#chatbox").append(`<p class ="botText"><span>${result.emotion}</span></p>`);
-      $("#textInput").val("")
-    },
-    error: function(result) {
-      alert('sorry an error occured');
-    }
+    processData: false
   });
 }

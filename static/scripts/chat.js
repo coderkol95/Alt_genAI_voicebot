@@ -35,7 +35,7 @@ function getTime() {
 
 // Gets the first message
 function firstBotMessage() {
-    let firstMessage = "How's it going?"
+    let firstMessage = "Welcome to QnA session powered by Generative AI!"
     document.getElementById("botStarterMessage").innerHTML = '<p class="botText"><span>' + firstMessage + '</span></p>';
 
     let time = getTime();
@@ -55,12 +55,33 @@ function getHardResponse(userText) {
     document.getElementById("chat-bar-bottom").scrollIntoView(true);
 }
 
+function getBotResponse(input) {
+    //rock paper scissors
+    if (input == "rock") {
+        return "paper";
+    } else if (input == "paper") {
+        return "scissors";
+    } else if (input == "scissors") {
+        return "rock";
+    }
+
+    // Simple responses
+    if (input == "hello") {
+        return "Hello there!";
+    } else if (input == "goodbye") {
+        return "Talk to you later!";
+    } else {
+        return "Try asking something else!";
+    }
+}
+
 //Gets the text text from the input box and processes it
+// Implemented in Python, by sending it through ajax
 function getResponse() {
     let userText = $("#textInput").val();
 
     if (userText == "") {
-        userText = "I love Code Palace!";
+        userText = "Please enter a valid input!";
     }
 
     let userHtml = '<p class="userText"><span>' + userText + '</span></p>';
@@ -68,9 +89,9 @@ function getResponse() {
     $("#textInput").val("");
     $("#chatbox").append(userHtml);
     document.getElementById("chat-bar-bottom").scrollIntoView(true);
-
+    
     setTimeout(() => {
-        getHardResponse(userText);
+        getHardResponse(userText);   // We have to get the result here
     }, 1000)
 
 }
@@ -98,6 +119,7 @@ function buttonSendText(sampleText) {
 // }
 
 // Press enter to send a message
+// Data is also sent to the flask backend
 $("#textInput").keypress(function (e) {
     if (e.which == 13) {
     var input = document.getElementById("textInput");
@@ -110,7 +132,7 @@ $("#textInput").keypress(function (e) {
     dataType: 'json'
   });
         
-        getResponse();
+    getResponse();
 
     }
 });
