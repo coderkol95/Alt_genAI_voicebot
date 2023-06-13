@@ -1,0 +1,76 @@
+<html>
+  <head>
+    <title>STT</title>
+  </head>
+  <div style="text-align: center;">
+    <h2>STT</h2>
+    <p>
+      <button type="button" id="record">record</button>
+      <button type="button" id="stopRecord" disabled>stop</button>
+      <!-- <input type="button" id="sendRecord" value="trans to text"> -->
+    </p>
+    <p>
+      <audio id=recordedAudio></audio>
+    </p>
+  </div>
+</html>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script>
+    let recordBlob;
+  
+    navigator.mediaDevices.getUserMedia({audio:true})
+                          .then(stream => {handlerFunction(stream)})
+  
+    function handlerFunction(stream) {
+      rec = new MediaRecorder(stream);
+      rec.ondataavailable = e => {
+        audioChunks.push(e.data);
+        if (rec.state == "inactive") {
+          recordBlob = new Blob(audioChunks, {type:'audio/wav; codecs=MS_PCM'});
+          recordedAudio.src = URL.createObjectURL(blob);
+          recordedAudio.controls=true;
+          recordedAudio.autoplay=true;
+        }
+      }
+    }
+  
+    record.onclick = e => {
+        record.disabled = true;
+        record.style.backgroundColor = "blue"
+        stopRecord.disabled=false;
+        audioChunks = [];
+        rec.start();
+    }
+  
+    stopRecord.onclick = e => {
+      record.disabled = false;
+      stop.disabled=true;
+      record.style.backgroundColor = "red"
+      rec.stop();
+    // }
+    // sendRecord.onclick = e => {
+      let formData = new FormData();
+      
+      formData.append('data', recordBlob, "data.wav");
+  
+      console.log('blob', recordBlob);
+  
+      $.ajax({
+        type: 'POST',
+        url: '/result',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function(result) {
+          console.log('success', result);
+  
+          $("#chatbox").append(`<p class ="userText"><audio style="background-color:white;" controls> <source src="${Url}" type="audio/wav"></audio></p>`);
+          $("#chatbox").append(`<p class ="botText"><span>${result.emotion}</span></p>`);
+          $("#textInput").val("")
+        },
+        error: function(result) {
+          alert('sorry an error occured');
+        }
+      });
+    }
+  </script>
