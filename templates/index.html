@@ -35,35 +35,33 @@
                         
                         <!-- User input box -->
                         <div class="chat-bar-input-block">
+                            
                             <div id="userInput">
                                 <input id="textInput" class="input-box" type="text" name="msg"
                                     placeholder="Tap 'Enter' to send a message">
                                 <p></p>
                             </div>
-
                             <div class="chat-bar-icons">
-                                <i id="chat-icon" style="color: crimson;" class="fa fa-fw fa-heart"
-                                    onclick="heartButton()"></i>
-                                <i id="chat-icon" style="color: #333;" class="fa fa-fw fa-send"
-                                    onclick="sendButton()"></i>
+                                <i id="record" style="color: crimson;" class="fa fa-fw fa-heart"></i>
+                                <i id="stopRecord" style="color: #333;" class="fa fa-fw fa-send"></i>
                             </div>
+                              <p>
+                                <audio id=recordedAudio></audio>
+                              </p>
                         </div>
-
                         <div id="chat-bar-bottom">
                             <p></p>
                         </div>
-
                     </div>
                 </div>
-
             </div>
         </div>
-
     </div>
 
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="static/scripts/responses.js"></script>
 <script src="static/scripts/chat.js"></script>
+<script src="static/scripts/audio_recorder.js"></script>
 
 </html>

@@ -89,17 +89,30 @@ function buttonSendText(sampleText) {
     // }, 1000)
 }
 
-function sendButton() {
-    getResponse();
-}
+// function sendButton() {
+//     getResponse();
+// }
 
-function heartButton() {
-    buttonSendText("Heart clicked!")
-}
+// function heartButton() {
+//     buttonSendText("Heart clicked!")
+// }
 
 // Press enter to send a message
 $("#textInput").keypress(function (e) {
     if (e.which == 13) {
+    var input = document.getElementById("textInput");
+
+  $.ajax({
+    type: 'POST',
+    url: '/result',
+    data: JSON.stringify(input.value),
+    contentType: "application/json",
+    dataType: 'json'
+  });
+        
         getResponse();
+
     }
 });
+
+
