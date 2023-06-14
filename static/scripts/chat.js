@@ -47,37 +47,30 @@ function firstBotMessage() {
 firstBotMessage();
 
 // Retrieves the response
-function getHardResponse(userText) {
-    let botResponse = getBotResponse(userText);
+function getHardResponse() {
+    let botResponse = getBotResponse();
     let botHtml = '<p class="botText"><span>' + botResponse + '</span></p>';
     $("#chatbox").append(botHtml);
 
     document.getElementById("chat-bar-bottom").scrollIntoView(true);
 }
 
-function getBotResponse(input) {
-    //rock paper scissors
-    if (input == "rock") {
-        return "paper";
-    } else if (input == "paper") {
-        return "scissors";
-    } else if (input == "scissors") {
-        return "rock";
-    }
+function getBotResponse() {
 
-    // Simple responses
-    if (input == "hello") {
-        return "Hello there!";
-    } else if (input == "goodbye") {
-        return "Talk to you later!";
-    } else {
-        return "Try asking something else!";
-    }
+    fetch('/result')
+    .then(function (response) {
+        return response.json();
+    })
+    // .then(function (reply) {
+    //     return JSON.stringify(reply)
+    // });
+    // return $("#reply").reply
 }
 
 //Gets the text text from the input box and processes it
 // Implemented in Python, by sending it through ajax
 function getResponse() {
+
     let userText = $("#textInput").val();
 
     if (userText == "") {
@@ -91,7 +84,7 @@ function getResponse() {
     document.getElementById("chat-bar-bottom").scrollIntoView(true);
     
     setTimeout(() => {
-        getHardResponse(userText);   // We have to get the result here
+        getHardResponse();   // We have to get the result here
     }, 1000)
 
 }

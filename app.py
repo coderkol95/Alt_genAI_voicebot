@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import os
 from datetime import datetime
 import re
@@ -40,9 +40,11 @@ def result():
         # reply is expected in text/audio format?
         ##########################################################################################
 
-
-        return render_template("index.html") #, reply=reply)
-    return render_template("index.html")
+        reply='Hello from Flask!'
+        return jsonify({'reply':reply})
+    else:
+        reply = {'reply':'Waiting for your input'}
+        return jsonify(reply)
 
 if __name__=='__main__':
     app.debug=True
