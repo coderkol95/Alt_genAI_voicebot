@@ -39,7 +39,7 @@ stopRecord.onclick = e => {
 
   $.ajax({
     type: 'POST',
-    url: '/result',
+    url: '/chatbot',
     data: formData,
     contentType: false,
     processData: false

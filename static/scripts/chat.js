@@ -48,7 +48,7 @@ firstBotMessage();
 
 // Retrieves the response
 function getHardResponse() {
-    fetch('/result')
+    fetch('/chatbot')
       .then(response => response.json())
       .then(data => {
         var reply = data.reply
@@ -65,7 +65,7 @@ function getHardResponse() {
 }
 
 function getBotResponse() {
-    fetch('/result' )
+    fetch('/chatbot' )
       .then(response => response.json())
       .then(data => {
         var myString = data.reply
@@ -94,7 +94,7 @@ function getResponse() {
     document.getElementById("chat-bar-bottom").scrollIntoView(true);
     
     setTimeout(() => {
-        getHardResponse();   // We have to get the result here
+        getHardResponse();
     }, 5000)
 
 }
@@ -129,7 +129,7 @@ $("#textInput").keypress(function (e) {
 
   $.ajax({
     type: 'POST',
-    url: '/result',
+    url: '/chatbot',
     data: JSON.stringify(input.value),
     contentType: "application/json",
     dataType: 'json'

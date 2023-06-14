@@ -13,8 +13,8 @@ app.config["UPLOAD_FOLDER"] = "./audio_files/"
 def index():
     return render_template('index.html')
 
-@app.route('/result', methods=['GET','POST'])
-def result():
+@app.route('/chatbot', methods=['GET','POST'])
+def chatbot():
 
     if request.method == "POST":
         if 'data' in request.files:
@@ -29,24 +29,22 @@ def result():
             # question = _convert_speech_to_text(filepath)
             #
             ##########################################################################################
-
+            question='hi' # Remove this when the above code block is ready
         else:
             question = request.get_json()
             print(question)
-        ##########################################################################################
-        # 
-        # reply=_prompt_openAI(question)        
-        # 
-        # reply is expected in text/audio format?
-        ##########################################################################################
+        _prompt_openAI(question)        
         
-        global reply
-        reply="123"
         return 'OK', 200
     
     else:
-        reply = {'reply':reply}
-        return jsonify(reply)
+        global reply
+        return jsonify({'reply':reply})
+    
+def _prompt_openAI(question):
+
+    global reply
+    reply=len(question.split())
 
 if __name__=='__main__':
     app.debug=True
