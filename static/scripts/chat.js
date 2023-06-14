@@ -48,24 +48,34 @@ firstBotMessage();
 
 // Retrieves the response
 function getHardResponse() {
-    let botResponse = getBotResponse();
-    let botHtml = '<p class="botText"><span>' + botResponse + '</span></p>';
+    fetch('/result')
+      .then(response => response.json())
+      .then(data => {
+        var reply = data.reply
+    let botHtml = '<p class="botText"><span>' + reply + '</span></p>';
     $("#chatbox").append(botHtml);
 
     document.getElementById("chat-bar-bottom").scrollIntoView(true);
+        // You can use the myString variable in JavaScript as needed
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    l
 }
 
 function getBotResponse() {
-
-    fetch('/result')
-    .then(function (response) {
-        return response.json();
-    })
-    // .then(function (reply) {
-    //     return JSON.stringify(reply)
-    // });
-    // return $("#reply").reply
-}
+    fetch('/result' )
+      .then(response => response.json())
+      .then(data => {
+        var myString = data.reply
+        reply = data.reply
+        // You can use the myString variable in JavaScript as needed
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
 
 //Gets the text text from the input box and processes it
 // Implemented in Python, by sending it through ajax
@@ -85,7 +95,7 @@ function getResponse() {
     
     setTimeout(() => {
         getHardResponse();   // We have to get the result here
-    }, 1000)
+    }, 5000)
 
 }
 

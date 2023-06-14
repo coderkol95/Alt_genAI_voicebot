@@ -39,11 +39,13 @@ def result():
         # 
         # reply is expected in text/audio format?
         ##########################################################################################
-
-        reply='Hello from Flask!'
-        return jsonify({'reply':reply})
+        
+        global reply
+        reply="123"
+        return 'OK', 200
+    
     else:
-        reply = {'reply':'Waiting for your input'}
+        reply = {'reply':reply}
         return jsonify(reply)
 
 if __name__=='__main__':
