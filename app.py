@@ -2,12 +2,14 @@ from flask import Flask, render_template, request, jsonify
 import os
 from datetime import datetime
 import re
+import whisper
+model = whisper.load_model("small")
 
 def filename():
     return re.sub('[^0-9]','',str(datetime.now()))
 
 app = Flask(__name__)
-app.config["UPLOAD_FOLDER"] = "./audio_files/"
+app.config["UPLOAD_FOLDER"] = "./data/"
 
 @app.route('/')
 def index():
@@ -19,32 +21,37 @@ def chatbot():
     if request.method == "POST":
         if 'data' in request.files:
             file = request.files['data']
+            filepath=os.path.join(app.config["UPLOAD_FOLDER"], "audio.wav")
             # Write the data to a file.
-            filepath = os.path.join(app.config["UPLOAD_FOLDER"], f"{filename()}.wav")
             file.save(filepath)
         
-            ##########################################################################################
-            # 
-            # Call function to convert this file to string and return it in variable 'question'
-            # question = _convert_speech_to_text(filepath)
-            #
-            ##########################################################################################
-            question='hi' # Remove this when the above code block is ready
+            question = _convert_speech_to_text(filepath)
         else:
             question = request.get_json()
-            print(question)
-        _prompt_openAI(question)        
+
+        with open(os.path.join(app.config["UPLOAD_FOLDER"], "question.txt"), 'w') as f:
+            f.write(question)
         
         return 'OK', 200
     
     else:
-        global reply
+        reply=_prompt_openAI()
         return jsonify({'reply':reply})
     
-def _prompt_openAI(question):
+def _convert_speech_to_text(file_path):
 
-    global reply
-    reply=len(question.split())
+    text = model.transcribe(file_path)
+    #printing the transcribe
+    return text['text']
+
+def _prompt_openAI():
+
+    with open(os.path.join(app.config["UPLOAD_FOLDER"], "question.txt"), 'r') as f:
+        question=f.read()
+    print(question)
+
+    reply=f"{question}, {len(question.split())}"
+    return reply
 
 if __name__=='__main__':
     app.debug=True

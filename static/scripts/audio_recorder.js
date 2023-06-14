@@ -29,12 +29,9 @@ stopRecord.onclick = e => {
   stop.disabled=true;
   record.style.backgroundColor = "white"
   rec.stop();
-// }
-// sendRecord.onclick = e => {
-  let formData = new FormData();
-  
-  formData.append('data', recordBlob, "data.wav");
 
+  let formData = new FormData();
+  formData.append('data', recordBlob, "data.wav");
   console.log('blob', recordBlob);
 
   $.ajax({
@@ -44,4 +41,6 @@ stopRecord.onclick = e => {
     contentType: false,
     processData: false
   });
+  getResponse();
+
 }

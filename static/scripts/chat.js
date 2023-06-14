@@ -47,7 +47,7 @@ function firstBotMessage() {
 firstBotMessage();
 
 // Retrieves the response
-function getHardResponse() {
+function getBackendResponse() {
     fetch('/chatbot')
       .then(response => response.json())
       .then(data => {
@@ -84,7 +84,7 @@ function getResponse() {
     let userText = $("#textInput").val();
 
     if (userText == "") {
-        userText = "Please enter a valid input!";
+        userText = "Your recorded audio was sent!";
     }
 
     let userHtml = '<p class="userText"><span>' + userText + '</span></p>';
@@ -94,7 +94,7 @@ function getResponse() {
     document.getElementById("chat-bar-bottom").scrollIntoView(true);
     
     setTimeout(() => {
-        getHardResponse();
+      getBackendResponse();
     }, 5000)
 
 }
@@ -107,19 +107,7 @@ function buttonSendText(sampleText) {
     $("#chatbox").append(userHtml);
     document.getElementById("chat-bar-bottom").scrollIntoView(true);
 
-    //Uncomment this if you want the bot to respond to this buttonSendText event
-    // setTimeout(() => {
-    //     getHardResponse(sampleText);
-    // }, 1000)
 }
-
-// function sendButton() {
-//     getResponse();
-// }
-
-// function heartButton() {
-//     buttonSendText("Heart clicked!")
-// }
 
 // Press enter to send a message
 // Data is also sent to the flask backend
