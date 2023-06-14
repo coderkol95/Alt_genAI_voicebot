@@ -1,46 +1,53 @@
-let recordBlob;
+// let recordBlob;
   
-navigator.mediaDevices.getUserMedia({audio:true})
-                      .then(stream => {handlerFunction(stream)})
+var recordButton = document.getElementById("recordButton");
+var mediaRecorder;
+var chunks = [];
 
-function handlerFunction(stream) {
-  rec = new MediaRecorder(stream);
-  rec.ondataavailable = e => {
-    audioChunks.push(e.data);
-    if (rec.state == "inactive") {
-      recordBlob = new Blob(audioChunks, {type:'audio/wav; codecs=MS_PCM'});
-      recordedAudio.src = URL.createObjectURL(blob);
-      recordedAudio.controls=true;
-      recordedAudio.autoplay=true;
-    }
+function toggleRecording() {
+  if (mediaRecorder && mediaRecorder.state === "recording") {
+    // Stop recording
+    mediaRecorder.stop();
+    recordButton.innerHTML = "Record";
+  } else {
+    // Start recording
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(function(stream) {
+        // Create MediaRecorder object
+        mediaRecorder = new MediaRecorder(stream);
+
+        // Event handlers for recording
+        mediaRecorder.ondataavailable = function(e) {
+          chunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = function() {
+          // Convert recorded data to a single Blob
+          var audioBlob = new Blob(chunks, { type: {type:'audio/wav; codecs=MS_PCM'} });
+
+          // Reset chunks array
+          chunks = [];
+
+          let formData = new FormData();
+          formData.append('data', audioBlob, "data.wav");
+          console.log('blob', audioBlob);
+
+          $.ajax({
+            type: 'POST',
+            url: '/chatbot',
+            data: formData,
+            contentType: false,
+            processData: false
+          });
+          getResponse();
+        };
+
+        // Start recording
+        mediaRecorder.start();
+        recordButton.innerHTML = "Stop";
+      })
+      .catch(function(err) {
+        console.error("Error accessing microphone: ", err);
+      });
   }
-}
-
-record.onclick = e => {
-    record.disabled = true;
-    record.style.backgroundColor = "green"
-    stopRecord.disabled=false;
-    audioChunks = [];
-    rec.start();
-}
-
-stopRecord.onclick = e => {
-  record.disabled = false;
-  stop.disabled=true;
-  record.style.backgroundColor = "white"
-  rec.stop();
-
-  let formData = new FormData();
-  formData.append('data', recordBlob, "data.wav");
-  console.log('blob', recordBlob);
-
-  $.ajax({
-    type: 'POST',
-    url: '/chatbot',
-    data: formData,
-    contentType: false,
-    processData: false
-  });
-  getResponse();
-
 }

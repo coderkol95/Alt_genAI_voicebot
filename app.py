@@ -4,6 +4,7 @@ from datetime import datetime
 import re
 import whisper
 model = whisper.load_model("small")
+import time
 
 def filename():
     return re.sub('[^0-9]','',str(datetime.now()))
@@ -37,22 +38,45 @@ def chatbot():
     else:
         reply=_prompt_openAI()
         return jsonify({'reply':reply})
-    
+
 def _convert_speech_to_text(file_path):
 
     text = model.transcribe(file_path)
-    #printing the transcribe
+
+    # Delete audio file so that same file's transcription is not possible next time
+    os.remove('./data/audio.wav')
+
     return text['text']
+
 
 def _prompt_openAI():
 
-    with open(os.path.join(app.config["UPLOAD_FOLDER"], "question.txt"), 'r') as f:
+    file_name=os.path.join(app.config["UPLOAD_FOLDER"], "question.txt")
+
+    # Wait if an audio file has not been transcribed yet
+    while not os.path.exists(file_name):
+        time.sleep(1)
+
+    with open(file_name, 'r') as f:
         question=f.read()
-    print(question)
 
     reply=f"{question}, {len(question.split())}"
+
+    # Delete file so that same file is not re-read
+    os.remove('./data/question.txt')
+
     return reply
 
 if __name__=='__main__':
-    app.debug=True
+
+    audio_file=os.path.join(app.config["UPLOAD_FOLDER"], "audio.wav")
+    text_file=os.path.join(app.config["UPLOAD_FOLDER"], "question.txt")
+
+    if os.path.exists(audio_file):
+        os.remove(audio_file)
+    
+    if os.path.exists(text_file):
+        os.remove(text_file)
+
+
     app.run(debug=True, port=5001)
