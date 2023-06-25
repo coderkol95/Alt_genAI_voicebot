@@ -10,6 +10,8 @@ networkx==3.1
 numba==0.57.0
 numpy==1.24.3
 openai-whisper==20230314
+pinecone-client
+pypdf
 regex==2023.6.3
 requests==2.31.0
 sympy==1.12
